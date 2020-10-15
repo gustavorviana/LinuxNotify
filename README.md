@@ -432,7 +432,7 @@ Signals when the notification manager has been started.
 
 It returns no arguments.
 
-* [] Notification
+* [ ] Notification
 * [x] LinuxNotify
 
 ### **destroy**
@@ -443,5 +443,5 @@ Signals when the notification manager is destroyed.
 
 It returns no arguments.
 
-* [] Notification
+* [ ] Notification
 * [x] LinuxNotify
