@@ -4,6 +4,13 @@ This module provides an api for [freedesktop.org Notifications](https://specific
 
 The module works with all operating systems that work with "org.freedesktop.Notifications", that is, there is no dependency on libnotify.
 
+
+Using D-Bus to send notifications, you can customize it however you want. See the examples below:
+
+![Full example](https://raw.githubusercontent.com/gustavorviana/LinuxNotify/master/images/Full.png)
+
+![Simple example](https://raw.githubusercontent.com/gustavorviana/LinuxNotify/master/images/Simple.png)
+
 # Writing
 
 ## Simple notification
