@@ -1,0 +1,24 @@
+{
+    "name": "linux-notify",
+    "version": "1.0.0",
+    "description": "",
+    "main": "bin/index.js",
+    "scripts": {
+        "install-prod": "npm install --only=prod",
+        "start-dev": "ts-node ./src/test.ts --project tsconfig.json"
+    },
+    "author": "Gustavo Viana",
+    "license": "ISC",
+    "dependencies": {
+        "dbus-native": "0.4.0"
+    },
+    "devDependencies": {
+        "@types/node": "^12.12.51",
+        "ts-node": "^9.0.0",
+        "typescript": "^4.0.2"
+    },
+    "engines": {
+        "node": ">=7.x"
+    },
+    "engineStrict": true
+}
