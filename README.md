@@ -1,9 +1,8 @@
 # Linux Notify
 
-This module provides an api for [freedesktop.org Notifications](https://specifications.freedesktop.org/notification-spec/latest/), working completely asynchronously.
+This module allows the application to send notifications to the Linux user without the need for an external program, using only the [freedesktop.org Notifications](https://specifications.freedesktop.org/notification-spec/1.2), fully asynchronous.
 
-The module works with all operating systems that work with "org.freedesktop.Notifications", that is, there is no dependency on libnotify.
-
+The module works with all operating systems that work with "org.freedesktop.Notifications".
 
 Using D-Bus to send notifications, you can customize it however you want. See the examples below:
 
@@ -39,7 +38,7 @@ const not = new LinuxNotify("LinuxNotify");
 //Create a notification object
 let full = not.createNotification("Full");
 
-//Defines the notification body (accepts html, see more at https://specifications.freedesktop.org/notification-spec/latest/ar01s04.html)
+//Defines the notification body (accepts html, see more at https://specifications.freedesktop.org/notification-spec/1.2/ar01s04.html)
 full.body = "Click on one of my buttons. <br> Or if you prefer you can click the <b>x</b> to close!";
 
 //Defines the notification image.
@@ -91,6 +90,8 @@ full.send(5000)
   * [removeSended()](#removeSended())
 
   * [clearSended()](#clearSended())
+
+  * [getCapabilities()](#getCapabilities())
 
 * [Notification](#Notification)
 
@@ -226,6 +227,12 @@ Removes notification from the sent list.
 
 Removes all notifications from the sent list of the current process.
 
+### **getCapabilities()**
+
+It returns an array of strings. Each string describes an optional capability implemented by the server.
+
+[Click here](https://specifications.freedesktop.org/notification-spec/1.2/ar01s09.html#idm45007456215520) for more information.
+
 ## **Notification**
 
 Asynchronously, this object is responsible for sending notifications to the system.
@@ -236,7 +243,7 @@ Notification summary, must be a string
 
 ### **body**
 
-Summary of notification, must be a string and accepts some html elements. See the table below or [click here](https://specifications.freedesktop.org/notification-spec/latest/ar01s04.html).
+Summary of notification, must be a string and accepts some html elements. See the table below or [click here](https://specifications.freedesktop.org/notification-spec/1.2/ar01s04.html).
 
 Tag | Type
 -------------------------------- | -------------
@@ -311,7 +318,7 @@ Checks whether the tip has been set.
 
 Defines a new tip or replaces the previous one
 
-[Click here](https://specifications.freedesktop.org/notification-spec/latest/ar01s08.html) to learn more about the hints.
+[Click here](https://specifications.freedesktop.org/notification-spec/1.2/ar01s08.html) to learn more about the hints.
 
 ### **removeHint**
 

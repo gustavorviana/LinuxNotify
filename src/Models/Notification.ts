@@ -124,7 +124,7 @@ export class Notification extends EventEmitter {
 
             this.validate(duration);
             let app_name = this.__owner.program;
-            let replaces_id = this._id || genId();
+            let replaces_id = this._id || 0;
             let app_icon = this.imagePath || '';
             let summary = this.summary;
             let body = this.body;
@@ -283,10 +283,6 @@ export class Notification extends EventEmitter {
     public getButton(id: string) {
         return this.__buttons.find((value) => value.id === id) || null;
     }
-}
-
-function genId() {
-    return Math.round(Math.random() * 65456);
 }
 
 function toDBusButtons(buttons: Button[]) {

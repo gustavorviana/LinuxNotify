@@ -62,8 +62,7 @@ export class LinuxNotify extends EventEmitter {
         if (os.type() !== 'Linux') throw new Error('Linux only');
 
         this.__list = [];
-        const service = this.__dbus.getService(serviceName);
-        this.__interface = await service.getInterfaceAsync<FreedesktopNotifications>(objName, ifaceName);
+        this.__interface = await this.__dbus.getInterface(serviceName, objName, ifaceName);
 
         this.__interface.on('ActionInvoked', this.onInvoke);
         this.__interface.on('NotificationClosed', this.onClosed);
@@ -96,6 +95,26 @@ export class LinuxNotify extends EventEmitter {
      */
     public get freedesktop() {
         return this.__interface;
+    }
+
+    /**
+     * It returns an array of strings. Each string describes an optional capability implemented by the server.
+     */
+    public async getCapabilities() {
+        if (this.needInit) {
+            await this.init()
+        }
+
+        return await new Promise<string[]>((resolve, reject) => {
+            this.freedesktop.GetCapabilities((error, results) => {
+                if (error) {
+                    reject(error)
+                    return;
+                }
+
+                resolve(results)
+            });
+        })
     }
 
     /**
@@ -153,40 +172,51 @@ export class LinuxNotify extends EventEmitter {
         return true;
     }
 
-    private onInvoke() {
-        const [id, action] = arguments;
-        const invoked = this.getSended(id);
+    private onInvoke(id: number, action: string) {
+        if (!this.canDispatch(id)) return;
 
-        const args = { id } as NotifyEvent & { button: Button };
-        args.button = { id: action } as Button;
+        const args = this.eventArgsById<{ button: Button }>(id);
 
-        if (!invoked && !this.__listenSystem) return;
-
-        if (invoked) {
-            args.notification = invoked;
-
-            let btn = invoked.getButton(action);
-            if (btn) args.button = btn;
-
-            invoked.emit('action', args);
+        if (args.notification && args.notification.hasButton(action)) {
+            args.button = args.notification.getButton(action);
+        } else {
+            args.button = { id: action } as Button;
         }
-        this.emit('action', args);
+
+        this.dispatchEvent('action', args)
     }
 
-    private onClosed() {
-        const [id, code] = arguments;
-        const sended = this.getSended(id);
+    private onClosed(id: number, code: number) {
+        if (!this.canDispatch(id)) return;
 
-        const event = { id, code } as NotifyEvent & { reason: ClosedReason, code: number };
-        event.reason = ClosedReason[code] as any as ClosedReason || ClosedReason.Unknow;
+        const args = this.eventArgsById<{ reason: ClosedReason, code: number }>(id);
+        
+        args.reason = ClosedReason[code] as any as ClosedReason || ClosedReason.Unknow;
+        args.code = code;
 
-        if (!sended && !this.__listenSystem) return;
-        if (sended) {
-            event.notification = sended;
-            sended.emit('closed', event);
+        this.dispatchEvent('closed', args)
+    }
+
+    protected dispatchEvent(name: string, args: NotifyEvent) {
+        if (!args.notification && !this.__listenSystem) return;
+
+        this.emit(name, args);
+        if (args.notification) {
+            args.notification.emit(name, args);
         }
+    }
 
-        this.emit('closed', event);
+    protected eventArgsById<T>(id: number) {
+        const args = {
+            id,
+            notification: this.getSended(id)
+        } as T & NotifyEvent
+
+        return args;
+    }
+
+    protected canDispatch(notifyId: number) {
+        return notifyId && (this.getSended(notifyId) || this.__listenSystem)
     }
 
     /**

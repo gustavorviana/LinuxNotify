@@ -36,7 +36,7 @@ export class SimpleDBus {
             });
         };
 
-        service.getObjectAsync = function <T = any>(name: string) {
+        service.getObjectAsync = function (name: string) {
             return new Promise((resolve, reject) => {
                 service.getObject(name, (errors, result) => {
                     if (errors) {
@@ -50,5 +50,17 @@ export class SimpleDBus {
         };
 
         return service;
+    }
+
+    public getObject(path: string, name: string) {
+        const service = this.getService(path);
+
+        return service.getObjectAsync(name)
+    }
+
+    public getInterface<T = Selector>(path: string, objName: string, name: string) {
+        const service = this.getService(path);
+
+        return service.getInterfaceAsync<T>(objName, name)
     }
 }

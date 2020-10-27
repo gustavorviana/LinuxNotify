@@ -14,7 +14,7 @@ not.on('action', (e) => {
 
 
 not.on('closed', (e) => {
-    console.log(`The notification '${e.notification ? e.notification.summary : e.id}' ended for reason ${e.reason}'.`);
+    console.log(`The notification '${e.notification ? e.notification.summary : e.id}' ended for reason '${e.reason}'.`);
 });
 
 

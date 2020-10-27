@@ -1,0 +1,8 @@
+src/*
+yarn.lock
+*.code-workspace
+tsconfig.*
+.git*
+bin/test.js
+bin/test.d.ts
+images/*
